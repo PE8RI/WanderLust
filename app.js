@@ -59,7 +59,7 @@ app.get("/listings/:id/edit", async (req, res) => {
 });
 
 //Update Route
-app.put("/listing/:id", async (req, res) => {
+app.put("/listings/:id", async (req, res) => {
   let { id } = req.params;
   await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true, runValidators: true });
 
