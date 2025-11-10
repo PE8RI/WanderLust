@@ -4,33 +4,22 @@
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-8">
-        
+
         <!-- Page Title -->
-        <h3 class="text-center mb-4 text-primary fw-bold">Listing Details</h3>
+        <h3 class="text-center mb-4 text-primary fw-bold"><%= listing.title %></h3>
 
         <!-- Listing Card -->
-        <div class="card shadow-lg border-0 rounded-4">
-          <img
-            src="<%= listing.image %>"
-            class="card-img-top rounded-top-4 img-fluid"
-            alt="<%= listing.title %>"
-            style="height: 250px; object-fit: cover;"
-          />
-          
+        <div class="card shadow-lg border-0 rounded-4 listing-card">
+          <img src="<%= listing.image %>" class="card-img-top rounded-top-4 img-fluid"
+               alt="<%= listing.title %>" style="height: 250px; object-fit: cover;" />
+
           <div class="card-body">
-            <h5 class="card-title text-center text-dark"><%= listing.title %></h5>
             <p class="card-text text-muted"><%= listing.description %></p>
-            
+
             <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item">
-                <strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %>
-              </li>
-              <li class="list-group-item">
-                <strong>Location:</strong> <%= listing.location %>
-              </li>
-              <li class="list-group-item">
-                <strong>Country:</strong> <%= listing.country %>
-              </li>
+              <li class="list-group-item"><strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %></li>
+              <li class="list-group-item"><strong>Location:</strong> <%= listing.location %></li>
+              <li class="list-group-item"><strong>Country:</strong> <%= listing.country %></li>
             </ul>
 
             <div class="d-flex justify-content-between">
@@ -47,7 +36,53 @@
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-</body>
+        <!-- Review Section -->
+        <div class="mt-5 review-section">
+          <h4 class="text-center text-success fw-bold mb-3">Leave a Review</h4>
+
+          <form method="POST"
+                action="/listings/<%= listing._id %>/reviews"
+                class="card p-4 shadow-sm rounded-4 bg-white needs-validation"
+                novalidate>
+
+            <!-- Rating -->
+            <div class="mb-3">
+              <label for="rating" class="form-label fw-semibold">Rating (1–5)</label>
+              <select name="review[rating]" id="rating" class="form-select" required>
+                <option value="">Select Rating</option>
+                <% for(let i=1; i<=5; i++){ %>
+                  <option value="<%= i %>"><%= i %></option>
+                <% } %>
+              </select>
+              <div class="invalid-feedback">Please select a rating.</div>
+            </div>
+
+            <!-- Comment -->
+            <div class="mb-3">
+              <label for="comment" class="form-label fw-semibold">Comment</label>
+              <textarea name="review[comment]" id="comment" class="form-control"
+                        placeholder="Write your experience..." rows="3" required></textarea>
+              <div class="invalid-feedback">Comment cannot be empty.</div>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+          </form>
+        </div>
+
+        <!-- 🧩 All Reviews Section -->
+        <p><b>Reviews</b></p>
+         <div class="row"> 
+          <% for(review of listing.reviews){%>
+              <div class="card col-5 ms-3 mb-3">
+                <div class="card-body">
+                  <h5 class="card-title">Ritwick </h5>
+                  <p class="card-text"><%=review.comment%></p>
+                  <p class="card-text"><%=review.rating%> star</p>
+                </div>
+              </div>
+          <%}%>
+        </div>
+        <br><br>
+
+        
