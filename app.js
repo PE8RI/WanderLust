@@ -105,6 +105,7 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 }));
 
 //review
+//post route
   app.post("/listings/:id/reviews",validateReview, wrapAsync(async (req, res) => {
   const listing = await Listing.findById(req.params.id);
   const newReview = new Review(req.body.review);
@@ -119,6 +120,17 @@ app.delete("/listings/:id", wrapAsync(async (req, res) => {
 
 }));
 
+//Delete Review Route
+
+ 
+app.delete("/listings/:id/reviews/:reviewId", async (req, res) => {
+  const { id, reviewId } = req.params;
+   await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+  await Review.findByIdAndDelete(reviewId);
+res.redirect(`/listings/${id}`);
+});
+
+//error handling
 
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
