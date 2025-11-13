@@ -27,11 +27,10 @@ const listingSchema = new Schema({
   ],
 });
 
-// ✅ Correct and clean middleware
+ 
 listingSchema.post("findOneAndDelete", async function (listing) {
   if (listing) {
-    // require inside avoids circular dependency errors
-    const Review = require("./review"); // ✅ lowercase filename match
+    const Review = require("./review");  
     await Review.deleteMany({
       _id: { $in: listing.reviews },
     });
