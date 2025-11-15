@@ -7,11 +7,15 @@ const ejsMate= require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const Session=require("express-session");
 const flash=require("connect-flash");
+const passport=require("passport");
+const localStrategy=require("passport-local");
+const User=require("./models/user");
 
  
 //routers listing
 const listingRouter = require("./routes/listing.js");
 const reviewRouter=require("./routes/review.js");
+const userRouter=require("./routes/user.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"))
@@ -51,15 +55,24 @@ app.get("/",(req,res)=>{
 app.use(Session(SessionOptions));
 app.use(flash()); 
  
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req,res,next)=>{
   res.locals.success=req.flash("success");
   res.locals.error=req.flash("error");
+  res.locals.currentUser = req.user;
   next();
 })
  
  
 app.use("/listings",listingRouter);
 app.use("/listings/:id/reviews",reviewRouter);
+app.use("/",userRouter);
  
 //error handling
 

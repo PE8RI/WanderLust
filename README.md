@@ -28,6 +28,7 @@ Built using **Node.js, Express, MongoDB, and EJS**, the app provides a clean and
 | **Database** | MongoDB (with Mongoose ODM) |
 | **Validation** | JOI Schema Validation |
 | **Templating Engine** | ejs-mate (for layouts and partials) |
+|**Authentication** | Passport |
 
 ---
 
