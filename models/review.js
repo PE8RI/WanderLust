@@ -14,6 +14,10 @@ const reviewSchema=new Schema({
   CreatedAt:{
     type:Date,
     default:Date.now()
+  }, 
+  Author:{
+    type: Schema.Types.ObjectId,
+    ref:"User",
   }
 })
 
