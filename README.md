@@ -29,7 +29,7 @@ Category	Technologies Used
 
 Wanderlust follows a layered MVC-style architecture with middleware-driven request handling and a MongoDB-backed data layer.
 
-                          🖥️ Client Layer (UI)
+                                    🖥️ Client Layer (UI)
                   ┌──────────────────────────────────┐
                   │ Browser • EJS Templates • CSS     │
                   └───────────────────┬───────────────┘
@@ -71,6 +71,7 @@ Wanderlust follows a layered MVC-style architecture with middleware-driven reque
                     │ Collections: listings, users, reviews │
                     │ Document storage (NoSQL)              │
                     └──────────────────────────────────────┘
+
 
 
 
