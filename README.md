@@ -17,6 +17,8 @@ Category	Technologies Used
 
 🛡️ Validation:	Joi (server-side), Bootstrap 5 validation (client-side)
 
+☁️ Image Uploads (NEW) | Cloudinary + Multer + multer-storage-cloudinary
+
 🔒 Security	:dotenv
 
 🎨 UI & Styling:	Bootstrap 5, Font Awesome Icons
@@ -164,27 +166,25 @@ POST	/signup	Create account
 GET	/login	Login page
 POST	/login	Authenticate
 GET	/logout	Logout
+
+
 📊 Impact & Observations
 
-Responsive UI across mobile and desktop
+Cloudinary drastically improves UI image loading
 
-MVC architecture simplifies scaling
+No filesystem storage needed
 
-Clean separation of concerns
+Faster delivery due to CDN
 
-Mongoose hooks prevent data inconsistency
+Cleaner code using Multer + Cloudinary storage
 
-Fast performance: 10–40ms avg local response time
-
-Easily extendable for cloud deployment
+Full listing + review functionality
 
 
 
 🔮 Future Improvements
 
 Add deployment to Render
-
-Add Cloudinary for image uploads
 
 Add Mapbox for maps & geolocation
 
