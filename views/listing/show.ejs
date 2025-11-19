@@ -14,7 +14,7 @@
                alt="<%= listing.title %>" style="height: 250px; object-fit: cover;" />
 
           <div class="card-body">
-            <p class="card-text text-muted">@<%= listing.owner.username%></p>
+            <p class="card-text text-muted">@<%= listing.owner.username %></p>
             <p class="card-text text-muted"><%= listing.description %></p>
 
             <ul class="list-group list-group-flush mb-3">
@@ -22,82 +22,138 @@
               <li class="list-group-item"><strong>Location:</strong> <%= listing.location %></li>
               <li class="list-group-item"><strong>Country:</strong> <%= listing.country %></li>
             </ul>
-            <%if(currentUser && currentUser._id.equals(listing.owner._id)){%>
-              <div class="d-flex justify-content-between">
-                <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning px-4">
-                  <i class="fa fa-edit"></i> Edit
-                </a>
-  
-                <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
-                  <button type="submit" class="btn btn-danger px-4">
-                    <i class="fa fa-trash"></i> Delete
-                  </button>
-                </form>
-              </div>
-            <%}%>
-             
+
+            <% if (currentUser && currentUser._id.equals(listing.owner._id)) { %>
+            <div class="d-flex justify-content-between">
+              <a href="/listings/<%= listing._id %>/edit" class="btn btn-warning px-4">
+                <i class="fa fa-edit"></i> Edit
+              </a>
+
+              <form method="POST" action="/listings/<%= listing._id %>?_method=DELETE">
+                <button type="submit" class="btn btn-danger px-4">
+                  <i class="fa fa-trash"></i> Delete
+                </button>
+              </form>
+            </div>
+            <% } %>
           </div>
         </div>
 
+
+        <!-- ⭐ STAR RATING CSS -->
+        <style>
+          .star-rating {
+            direction: rtl;
+            unicode-bidi: bidi-override;
+            display: inline-flex;
+            gap: 4px;
+          }
+
+          .star-rating input {
+            display: none;
+          }
+
+          .star-rating label {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: 0.2s;
+          }
+
+          .star-rating input:checked ~ label {
+            color: gold;
+          }
+
+          .star-rating label:hover,
+          .star-rating label:hover ~ label {
+            color: gold;
+          }
+        </style>
+
+
         <!-- Review Section -->
-         
         <div class="mt-5 review-section">
           <h4 class="text-center text-success fw-bold mb-3">Leave a Review</h4>
-        
-          <% if(currentUser){ %>
-            <form method="POST"
-                  action="/listings/<%= listing._id %>/reviews"
-                  class="card p-4 shadow-sm rounded-4 bg-white needs-validation"
-                  novalidate>
-              
-              <!-- Rating -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold">Rating (1–5)</label>
-                <select name="review[rating]" class="form-select" required>
-                  <option value="">Select Rating</option>
-                  <% for (let i = 1; i <= 5; i++) { %>
-                    <option value="<%= i %>"><%= i %></option>
-                  <% } %>
-                </select>
+
+          <% if (currentUser) { %>
+          <form method="POST"
+                action="/listings/<%= listing._id %>/reviews"
+                class="card p-4 shadow-sm rounded-4 bg-white needs-validation"
+                novalidate>
+
+            <!-- ⭐ STAR RATING INPUT -->
+            <div class="mb-3 text-center">
+              <label class="form-label fw-semibold">Rating</label>
+
+              <div class="star-rating">
+
+                <input type="radio" id="star5" name="review[rating]" value="5">
+                <label for="star5">★</label>
+
+                <input type="radio" id="star4" name="review[rating]" value="4">
+                <label for="star4">★</label>
+
+                <input type="radio" id="star3" name="review[rating]" value="3">
+                <label for="star3">★</label>
+
+                <input type="radio" id="star2" name="review[rating]" value="2">
+                <label for="star2">★</label>
+
+                <input type="radio" id="star1" name="review[rating]" value="1">
+                <label for="star1">★</label>
+
               </div>
-        
-              <!-- Comment -->
-              <div class="mb-3">
-                <label class="form-label fw-semibold">Comment</label>
-                <textarea name="review[comment]"
-                          class="form-control"
-                          rows="3"
-                          required></textarea>
-              </div>
-        
-              <!-- Submit -->
-              <button type="submit" class="btn btn-primary w-100">Submit Review</button>
-            </form>
+            </div>
+
+            <!-- Comment -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Comment</label>
+              <textarea name="review[comment]" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+          </form>
           <% } %>
-        
         </div>
-        
- 
+
+
         <!-- 🧩 All Reviews Section -->
-        <p><b>Reviews</b></p>
-         <div class="row"> 
-          <% for(review of listing.reviews){%>
-              <div class="card col-5 ms-3 mb-3">
-                <div class="card-body">
-                  <h5 class="card-title"><%=review.Author.username%></h5>
-                  <p class="card-text"><%=review.comment%></p>
-                  <p class="card-text"><%=review.rating%> star</p>
-                   
-                </div>
-                <%if(currentUser && currentUser._id.equals(review.Author._id)){%>
-                <form class="mb-3" method="POST" action="/listings/<%=listing._id%>/reviews/<%=review._id%>?_method=DELETE">
-                  <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-                <%}%>
-               </div>
-               
-          <%}%>
+        <p class="mt-4"><b>Reviews</b></p>
+        <div class="row">
+          <% for (review of listing.reviews) { %>
+          <div class="card col-5 ms-3 mb-3">
+            <div class="card-body">
+              <h5 class="card-title"><%= review.Author.username %></h5>
+
+              <!-- ⭐ STAR DISPLAY -->
+              <p class="card-text">
+                <% for (let i = 1; i <= 5; i++) { %>
+                  <% if (i <= review.rating) { %>
+                    ★
+                  <% } else { %>
+                    ☆
+                  <% } %>
+                <% } %>
+              </p>
+
+              <p class="card-text"><%= review.comment %></p>
+            </div>
+
+            <% if (currentUser && currentUser._id.equals(review.Author._id)) { %>
+            <form method="POST" class="mb-3"
+                  action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+            <% } %>
+
+          </div>
+          <% } %>
         </div>
+
         <br><br>
 
-        
+      </div>
+    </div>
+  </div>
+</body>
