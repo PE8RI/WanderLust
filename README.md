@@ -31,7 +31,7 @@ Category	Technologies Used
 
 ## 🏗️ Architecture Diagram
 
-![Architecture Diagram](assets/architecture_image.png)
+![Architecture Diagram](assets/architecture.png)
 
 
 ✨ Core Features
