@@ -3,6 +3,9 @@ const router = express.Router();
 const wrapAsync = require("../utils/wrapAsync");
 const { isLoggedIn, Isowner, validateListing } = require("../middleware.js");
 const listingController = require("../controllers/listing.js");
+const multer  = require('multer');
+const {storage}=require("../cloudConfig.js");
+const upload = multer({storage});
 
 // INDEX + CREATE
 router
@@ -11,8 +14,9 @@ router
   .post(
     isLoggedIn,
     validateListing,
-    wrapAsync(listingController.Create)                        // POST create listing
-  );
+    upload.single("listing[image]"),
+    wrapAsync(listingController.Create)
+  )
 
 // NEW (only form page)
 router.get("/new", isLoggedIn, listingController.New);
@@ -24,6 +28,7 @@ router
   .put(
     isLoggedIn,
     Isowner,
+    upload.single("listing[image]"),
     validateListing,
     wrapAsync(listingController.Update)                        // PUT update listing
   )
