@@ -1,6 +1,4 @@
-if(process.env.NODE_ENV!="production"){
-  require("dotenv").config();
-}
+require("dotenv").config();
  
 const express=require("express");
 const app=express();
@@ -10,6 +8,7 @@ const methodOverride = require("method-override");
 const ejsMate= require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const Session=require("express-session");
+const MongoStore = require('connect-mongo');
 const flash=require("connect-flash");
 const passport=require("passport");
 const localStrategy=require("passport-local");
@@ -37,27 +36,37 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect(process.env.MONGO_URL);
+  await mongoose.connect(process.env.MONGO_Atlas_URL);
 }
+ 
 
+const store = MongoStore.create({
+  mongoUrl: process.env.MONGO_Atlas_URL,
+  collectionName: "sessions",
+  ttl: 7 * 24 * 60 * 60,  // 7 days
+  touchAfter:24*3600,
+  autoRemove: "native"
+});
 
-const SessionOptions = {
+store.on("error", (err) => {
+  console.error("SESSION STORE ERROR:", err);
+});
+
+const sessionOptions = {
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
+  store: store,
   cookie: {
-    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
-  },
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  }
 };
 
+app.use(Session(sessionOptions));
 
-// app.get("/",(req,res)=>{
-//   res.send("working");
-// })
 
-app.use(Session(SessionOptions));
+
 app.use(flash()); 
  
 app.use(passport.initialize());
@@ -81,15 +90,19 @@ app.use("/",userRouter);
  
 //error handling
 
-app.all(/.*/, (req, res, next) => {
+app.use((req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
 
-app.use((err,req,res,next)=>{
-  let {status=500,message="Something went wrong"}=err;
-  res.status(status).render("error.ejs",{err});
-})
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);  // prevents double send
+  }
+  let { status = 500 } = err;
+  res.status(status).render("error.ejs", { err });
+});
+
 
 app.listen(8080,(req,res)=>{
   console.log("Server started")

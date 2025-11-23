@@ -17,7 +17,9 @@ Category	Technologies Used
 
 🛡️ Validation:	Joi (server-side), Bootstrap 5 validation (client-side)
 
-☁️ Image Uploads (NEW) | Cloudinary + Multer + multer-storage-cloudinary
+☁️ Image Uploads  | Cloudinary + Multer + multer-storage-cloudinary
+
+🗺️ Maps & Geolocation   |  Mapbox SDK, Mapbox GL JS
 
 🔒 Security	:dotenv
 
@@ -88,7 +90,15 @@ Bootstrap 5 responsive components
 Styled review cards & listing cards
 
 
+🗺️ Mapbox Geolocation (NEW)
 
+Auto-geocoding of listing locations using Mapbox SDK
+
+Maps displayed using Mapbox GL JS
+
+Real coordinates stored in MongoDB (geometry field)
+
+Marker showing listing location on map
 
 
 ⚙️ Setup & Run Instructions
@@ -139,6 +149,7 @@ image: String
 price: Number
 location: String
 country: String
+geometry (Mapbox coordinates)
 owner: ObjectId -> User
 reviews: [ObjectId] -> Review
 
@@ -174,6 +185,8 @@ Cloudinary drastically improves UI image loading
 
 No filesystem storage needed
 
+Mapbox adds modern interactive maps + real-world coordinates
+
 Faster delivery due to CDN
 
 Cleaner code using Multer + Cloudinary storage
@@ -184,9 +197,7 @@ Full listing + review functionality
 
 🔮 Future Improvements
 
-Add deployment to Render
-
-Add Mapbox for maps & geolocation
+Add Mapbox clustering & region-based filtering
 
 Add advanced search & filtering
 
@@ -194,4 +205,4 @@ Add user profile pages
 
 Add pagination & sorting
 
-Implement Redis-backed session store for production
+ 

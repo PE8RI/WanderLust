@@ -1,11 +1,9 @@
 <% layout("layouts/boilerplate") %>
 
-<body class="bg-light">
-  <div class="container text-center mt-5">
-    <div class="alert alert-danger p-5 rounded-4 shadow-sm">
-      <h1 class="mb-3"><%= err.status || 500 %> Error</h1>
-      <p class="lead"><%= err.message || "Something went wrong!" %></p>
-      <a href="/listings" class="btn btn-dark mt-3">Go Back to Listings</a>
-    </div>
+<div class="container text-center mt-5">
+  <div class="alert alert-danger p-5 rounded-4 shadow-sm">
+    <h1 class="mb-3"><%= err.status || 500 %> Error</h1>
+    <p class="lead"><%= err.message || "Something went wrong!" %></p>
+    <a href="/listings" class="btn btn-dark mt-3">Go Back to Listings</a>
   </div>
-</body>
+</div>
