@@ -98,3 +98,10 @@
  .show-img{
   height:30vh;
  }
+
+ #map{
+  height:400px;
+  width:80vh;
+  border-radius:5px;
+  border-color:black;
+ }

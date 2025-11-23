@@ -14,7 +14,7 @@ router
   .post(
     isLoggedIn,
     validateListing,
-    upload.single("listing[image]"),
+    upload.single("image"),
     wrapAsync(listingController.Create)
   )
 
@@ -28,7 +28,7 @@ router
   .put(
     isLoggedIn,
     Isowner,
-    upload.single("listing[image]"),
+    upload.single("image"),
     validateListing,
     wrapAsync(listingController.Update)                        // PUT update listing
   )

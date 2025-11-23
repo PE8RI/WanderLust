@@ -1,6 +1,10 @@
 const { cloudinary } = require("../cloudConfig");
 const ExpressError = require("../utils/ExpressError");
 const Listing = require("../models/listing");
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const maptoken=process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: maptoken });
+
 
 // Show all listings
 module.exports.index = async (req, res) => {
@@ -39,25 +43,41 @@ module.exports.Show = async (req, res) => {
 // Create a new listing
 module.exports.Create = async (req, res) => {
 
-  // Debugging – SEE if file is being uploaded
-  console.log("REQ.FILE =", req.file);
+  // 1️⃣ Get coordinates using Mapbox
+  let response = await geocodingClient
+    .forwardGeocode({
+      query: req.body.listing.location,
+      limit: 1
+    })
+    .send();
 
+  const geoData = response.body.features[0].geometry;  // Point + coordinates
+
+  // 2️⃣ Create new listing (DO NOT spread the body)
   const newListing = new Listing(req.body.listing);
+
+  // 3️⃣ Add geometry BEFORE saving (VERY IMPORTANT)
+  newListing.geometry = geoData;
+
+  // 4️⃣ Add owner
   newListing.owner = req.user._id;
 
-  // Only store image if multer received it
+  // 5️⃣ Add image if upload exists
   if (req.file) {
     newListing.image = {
-      url: req.file.path,          // Cloudinary URL
-      filename: req.file.filename  // Cloudinary public_id
+      url: req.file.path,
+      filename: req.file.filename
     };
   }
 
+  // 6️⃣ Save listing
   await newListing.save();
 
-  req.flash("success", "New listing Created!");
+  req.flash("success", "New listing created!");
   res.redirect("/listings");
 };
+
+
 
 
 // Render form to edit a listing
@@ -75,7 +95,6 @@ module.exports.Edit = async (req, res) => {
 
 // Update an existing listing
 module.exports.Update = async (req, res, next) => {
-  // If request data missing
   if (!req.body.listing) {
     return next(new ExpressError(400, "Bad Request"));
   }
@@ -90,32 +109,43 @@ module.exports.Update = async (req, res, next) => {
     return res.redirect("/listings");
   }
 
-  // Update text fields
+  // 1️⃣ Update basic fields
   listing.title = req.body.listing.title;
   listing.description = req.body.listing.description;
   listing.price = req.body.listing.price;
   listing.country = req.body.listing.country;
-  listing.location = req.body.listing.location;
 
-  // If new image uploaded
+  // 2️⃣ Check if location has changed → Update coordinates
+  if (req.body.listing.location !== listing.location) {
+    listing.location = req.body.listing.location;
+
+    let response = await geocodingClient.forwardGeocode({
+      query: req.body.listing.location,
+      limit: 1
+    }).send();
+
+    listing.geometry = response.body.features[0].geometry; 
+  }
+
+  // 3️⃣ If new image uploaded → replace old one
   if (req.file) {
-    // Delete old image from Cloudinary
     if (listing.image && listing.image.filename) {
       await cloudinary.uploader.destroy(listing.image.filename);
     }
 
-    // Store new image from Cloudinary
     listing.image = {
       url: req.file.path,
       filename: req.file.filename
     };
   }
 
+  // Save changes
   await listing.save();
 
   req.flash("success", "Listing successfully updated!");
   res.redirect(`/listings/${id}`);
 };
+
 // Delete a listing
 module.exports.Delete = async (req, res) => {
   const { id } = req.params;

@@ -119,8 +119,10 @@
 
 
         <!-- 🧩 All Reviews Section -->
-        <p class="mt-4"><b>Reviews</b></p>
+        <%if(listing.reviews.length>0){%>
+         
         <div class="row">
+          <p class="mt-4"><b>All Reviews</b></p>
           <% for (review of listing.reviews) { %>
           <div class="card col-5 ms-3 mb-3">
             <div class="card-body">
@@ -146,14 +148,21 @@
               <button type="submit" class="btn btn-sm btn-danger">Delete</button>
             </form>
             <% } %>
-
-          </div>
+         </div>
           <% } %>
-        </div>
+        </div> <%}%>
 
         <br><br>
-
-      </div>
     </div>
   </div>
+</div>
+    <div class="col-6 offset-2 mb-3">
+      <h3>where you will be!</h3>
+      <div id="map"></div>
+    </div>
+    <script>
+     const mapToken="<%=process.env.MAP_TOKEN%>";
+     const coordinates= "<%- JSON.stringify(listing.geometry.coordinates) %>";
+    </script>
+    <script src="/js/map.js"></script>
 </body>
