@@ -105,3 +105,35 @@
   border-radius:5px;
   border-color:black;
  }
+
+ #filters{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+ }
+  .filter{
+    margin-right:2rem;
+    margin-top:1rem;
+    text-align: center;
+    opacity:0.7;
+  }
+  .filter:hover{
+    opacity:1;
+    cursor: pointer;
+  }
+ 
+  .filter p{
+    font-size:0.8rem;
+  }
+  .tax-info{
+    display:none;
+  }
+  .tax{
+    border:1px solid black;
+    border-radius:1rem;
+    height:3rem;
+    padding:1rem;
+    margin-left:3rem;
+    display:flex;
+    align-items:center;
+  }

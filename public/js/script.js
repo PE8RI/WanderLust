@@ -17,3 +17,17 @@
     }, false)
   })
 })()
+
+let TaxSwitch = document.getElementById("switchCheckDefault");
+  
+  TaxSwitch.addEventListener("click", () => {
+    let TaxInfo = document.querySelectorAll(".tax-info");
+  
+    TaxInfo.forEach(info => {
+      if (info.style.display !== "inline") {
+        info.style.display = "inline";   // show
+      } else {
+        info.style.display = "none";     // hide
+      }
+    });
+  });
